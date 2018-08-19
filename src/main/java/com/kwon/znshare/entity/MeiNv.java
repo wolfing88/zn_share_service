@@ -35,15 +35,14 @@ public class MeiNv {
     @Column(nullable = false)
     private String cover;//封面图片
 
-    @NotEmpty(message = "图片主键不能为空")
+    @NotEmpty(message = "片段不能为空")
     @Column(nullable = false)
-    private String key;//图片主键
+    private String fragment;//拼接图片链接的片段
     @NotEmpty(message = "图片数量不能为空")
     @Column(nullable = false)
     private String total;//图片数量
 
-    @NotEmpty(message = "创建日期不能为空")
-    @Column (nullable = false)
+    @Column(nullable = false)
     private Date creatTime;
 
     public Long getId() {
@@ -78,12 +77,12 @@ public class MeiNv {
         this.cover = cover;
     }
 
-    public String getKey() {
-        return key;
+    public String getFragment() {
+        return fragment;
     }
 
-    public void setKey(String key) {
-        this.key = key;
+    public void setFragment(String fragment) {
+        this.fragment = fragment;
     }
 
     public String getTotal() {

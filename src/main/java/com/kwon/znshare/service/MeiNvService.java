@@ -59,9 +59,10 @@ public class MeiNvService {
                         for (Element gallery : gallerylis) {
                             mv = new MeiNv();
                             cover = gallery.select("img").first().attr("data-original");
+                            mv.setType(type.get("type"));
                             mv.setCover(cover);
                             mv.setTitle(gallery.select("a.caption").first().html());
-                            mv.setKey(cover.substring((cover.indexOf("gallery") + 7), cover.indexOf("cover")));
+                            mv.setFragment(cover.substring((cover.indexOf("gallery") + 7), cover.indexOf("cover")));
                             urlTemp = gallery.select("a.caption").attr("href");
                             mv = getMeiNvImgInfo(mv, urlTemp);
                             if (!DateUtil.isSameDate(new Date(), mv.getCreatTime())) {
