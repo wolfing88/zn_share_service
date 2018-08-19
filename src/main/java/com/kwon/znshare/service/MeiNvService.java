@@ -19,7 +19,7 @@ public class MeiNvService {
     @Autowired
     private MeiNvRepository meiNvRepository;
 
-    static String host = "https://www.nvshens.com";
+    private String host = "https://www.nvshens.com";
 
     public void getMeiNvImg() {
         List<Map<String, String>> typesMapList = new ArrayList<>();
@@ -29,7 +29,7 @@ public class MeiNvService {
             Elements tag_divs = doc.select("div.tag_div");
             for (Element ele : tag_divs) {
                 Elements links = ele.select("a[href]");
-                Map<String, String> typeMap = null;
+                Map<String, String> typeMap;
                 for (Element link : links) {
                     typeMap = new HashMap<>();
                     typeMap.put("href", link.attr("href"));
@@ -65,13 +65,17 @@ public class MeiNvService {
                             mv.setFragment(cover.substring((cover.indexOf("gallery") + 7), cover.indexOf("cover")));
                             urlTemp = gallery.select("a.caption").attr("href");
                             mv = getMeiNvImgInfo(mv, urlTemp);
-                            if (!DateUtil.isSameDate(new Date(), mv.getCreatTime())) {
-                                flag = false;
-                                break;
-                            }
+                            //只获取当天更新的数据
+//                            if (!DateUtil.isSameDate(new Date(), mv.getCreatTime())) {
+//                                flag = false;
+//                                break;
+//                            }
                             meiNvList.add(mv);
                         }
-                        meiNvRepository.saveAll(meiNvList);
+                        if (meiNvList.size() > 0) {
+                            System.out.println("保存" + type.get("type") + "图片，共" + meiNvList.size() + "个");
+                            meiNvRepository.saveAll(meiNvList);
+                        }
                     } else {
                         flag = false;
                     }
