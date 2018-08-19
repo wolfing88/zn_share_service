@@ -850,6 +850,7 @@ public class DateUtil {
 
     /**
      * 修改系统时间
+     *
      * @param date
      * @param time
      * @return
@@ -899,7 +900,7 @@ public class DateUtil {
                 diff = time1 - time2;
             }
 
-            hour = (diff / (60 * 60 * 1000) );
+            hour = (diff / (60 * 60 * 1000));
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -908,6 +909,7 @@ public class DateUtil {
 
     /**
      * 获得两个时间相差距离多少秒
+     *
      * @param one
      * @param two
      * @return
@@ -925,7 +927,7 @@ public class DateUtil {
                 diff = time1 - time2;
             }
 
-            sec = (diff / 1000 );
+            sec = (diff / 1000);
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -934,6 +936,7 @@ public class DateUtil {
 
     /**
      * 获得两个时间相差距离多少毫秒
+     *
      * @param one
      * @param two
      * @return
@@ -958,11 +961,21 @@ public class DateUtil {
         return ms;
     }
 
-
+    /**
+     * 判断是否同一天
+     * @param date1
+     * @param date2
+     * @return
+     */
+    public static boolean isSameDate(Date date1, Date date2) {
+        if (parseDateToStr(date1, DATE_FORMAT_YYYY_MM_DD).equals(parseDateToStr(date2, DATE_FORMAT_YYYY_MM_DD))) {
+            return true;
+        }
+        return false;
+    }
 
     public static void main(String[] args) {
         try {
-
 
 //            long[] distanceTime = getDistanceTime(new Date(Long.valueOf("1531057884142")), new Date());
 //
@@ -971,14 +984,13 @@ public class DateUtil {
 //                System.out.print( l + ",");
 //            }
             System.out.println();
-            System.out.println(getDistanceHours(parseStrToDate("2018-7-16 13:00:00",DATE_TIME_FORMAT_YYYY_MM_DD_HH_MI_SS), parseStrToDate("2018-7-16 18:00:00",DATE_TIME_FORMAT_YYYY_MM_DD_HH_MI_SS)));
+            System.out.println(getDistanceHours(parseStrToDate("2018-7-16 13:00:00", DATE_TIME_FORMAT_YYYY_MM_DD_HH_MI_SS), parseStrToDate("2018-7-16 18:00:00", DATE_TIME_FORMAT_YYYY_MM_DD_HH_MI_SS)));
             System.out.println();
             System.out.println(getDistanceHours(new Date(Long.valueOf("1531057884142")), new Date()));
 
 //            System.out.println(parseDateToStr(new Date(Long.valueOf("1531042384910")),DateUtil.DATE_TIME_FORMAT_YYYY_MM_DD_HH_MI_SS));
 
 //            setDatetime("2018-7-7", "17:01:02");
-
 
         } catch (Exception e) {
             // TODO: handle exception

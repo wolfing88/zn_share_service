@@ -1,9 +1,8 @@
 package com.kwon.znshare.entity;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
+import javax.persistence.*;
+import javax.validation.constraints.NotEmpty;
+import java.util.Date;
 
 @Entity
 public class MeiNv {
@@ -24,4 +23,82 @@ public class MeiNv {
     @GeneratedValue(strategy = GenerationType.IDENTITY) // 自增长策略
     private Long id; //id
 
+    @NotEmpty(message = "类型不能为空")
+    @Column(nullable = false)
+    private String type;//类型
+
+    @NotEmpty(message = "标题不能为空")
+    @Column(nullable = false)
+    private String title;//标题
+
+    @NotEmpty(message = "封面不能为空")
+    @Column(nullable = false)
+    private String cover;//封面图片
+
+    @NotEmpty(message = "图片主键不能为空")
+    @Column(nullable = false)
+    private String key;//图片主键
+    @NotEmpty(message = "图片数量不能为空")
+    @Column(nullable = false)
+    private String total;//图片数量
+
+    @NotEmpty(message = "创建日期不能为空")
+    @Column (nullable = false)
+    private Date creatTime;
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+    public String getType() {
+        return type;
+    }
+
+    public void setType(String type) {
+        this.type = type;
+    }
+
+    public String getTitle() {
+        return title;
+    }
+
+    public void setTitle(String title) {
+        this.title = title;
+    }
+
+    public String getCover() {
+        return cover;
+    }
+
+    public void setCover(String cover) {
+        this.cover = cover;
+    }
+
+    public String getKey() {
+        return key;
+    }
+
+    public void setKey(String key) {
+        this.key = key;
+    }
+
+    public String getTotal() {
+        return total;
+    }
+
+    public void setTotal(String total) {
+        this.total = total;
+    }
+
+    public Date getCreatTime() {
+        return creatTime;
+    }
+
+    public void setCreatTime(Date creatTime) {
+        this.creatTime = creatTime;
+    }
 }
