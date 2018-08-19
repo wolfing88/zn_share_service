@@ -1,23 +1,27 @@
 package com.kwon.znshare.service;
 
 import com.kwon.znshare.entity.MeiNv;
+import com.kwon.znshare.repository.MeiNvRepository;
 import com.kwon.znshare.util.DateUtil;
-import com.kwon.znshare.util.HttpClientTools;
 import com.kwon.znshare.util.HttpClientUtil;
 import org.jsoup.Jsoup;
-import org.jsoup.helper.DataUtil;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
-import java.io.IOException;
 import java.util.*;
 
+@Service
 public class MeiNvService {
+
+    @Autowired
+    private MeiNvRepository meiNvRepository;
 
     static String host = "https://www.nvshens.com";
 
-    public static void main(String[] args) throws IOException {
+    public void getMeiNvImg() {
         List<Map<String, String>> typesMapList = new ArrayList<>();
         Map<String, String> map = HttpClientUtil.baseAccessURL("https://www.nvshens.com/gallery/", false);
         if (map.get("responseStatusCode").equals("200")) {
@@ -66,7 +70,7 @@ public class MeiNvService {
                             }
                             meiNvList.add(mv);
                         }
-
+                        meiNvRepository.saveAll(meiNvList);
                     } else {
                         flag = false;
                     }
@@ -84,7 +88,7 @@ public class MeiNvService {
      * @param urlTemp
      * @return
      */
-    private static MeiNv getMeiNvImgInfo(MeiNv mv, String urlTemp) {
+    private MeiNv getMeiNvImgInfo(MeiNv mv, String urlTemp) {
         Map<String, String> map = HttpClientUtil.baseAccessURL(host + urlTemp, false);
         if (map.get("responseStatusCode").equals("200")) {
             Document doc = Jsoup.parse(map.get("responseBody"));
