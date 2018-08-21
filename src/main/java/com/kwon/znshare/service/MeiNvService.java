@@ -4,6 +4,8 @@ import com.kwon.znshare.entity.MeiNv;
 import com.kwon.znshare.repository.MeiNvRepository;
 import com.kwon.znshare.util.DateUtil;
 import com.kwon.znshare.util.HttpClientUtil;
+import com.kwon.znshare.util.Util;
+import com.kwon.znshare.vo.CommonVo;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
@@ -65,6 +67,9 @@ public class MeiNvService {
                             mv.setFragment(cover.substring((cover.indexOf("gallery") + 7), cover.indexOf("cover")));
                             urlTemp = gallery.select("a.caption").attr("href");
                             mv = getMeiNvImgInfo(mv, urlTemp);
+                            if (Util.isEmpty(mv.getTotal())) {
+                                continue;
+                            }
                             //只获取当天更新的数据
 //                            if (!DateUtil.isSameDate(new Date(), mv.getCreatTime())) {
 //                                flag = false;
@@ -73,7 +78,10 @@ public class MeiNvService {
                             meiNvList.add(mv);
                         }
                         if (meiNvList.size() > 0) {
-                            System.out.println("保存" + type.get("type") + "图片，共" + meiNvList.size() + "个");
+                            System.out.println("保存" + type.get("type") + "图片，第" + page + "页");
+//                            for (MeiNv m :meiNvList){
+//                                System.out.println(m.getTitle());
+//                            }
                             meiNvRepository.saveAll(meiNvList);
                         }
                     } else {
@@ -97,13 +105,24 @@ public class MeiNvService {
         Map<String, String> map = HttpClientUtil.baseAccessURL(host + urlTemp, false);
         if (map.get("responseStatusCode").equals("200")) {
             Document doc = Jsoup.parse(map.get("responseBody"));
-            String totalTemp = doc.select("div#dinfo > span").first().html();
-            String timeTemp = doc.select("div#dinfo").first().html();
-            String creatTimeTemp = timeTemp.substring((timeTemp.indexOf("，在 ") + 3), timeTemp.indexOf(" 创建"));
-            mv.setTotal(totalTemp.substring(0, totalTemp.indexOf("张照片")));
-            mv.setCreatTime(DateUtil.parseStrToDate(creatTimeTemp, "yyyy/MM/dd"));
+            Elements els = doc.select("div#dinfo");
+            if (els.size() > 0) {
+                String totalTemp = els.select("span").first().html();
+                String timeTemp = doc.select("div#dinfo").first().html();
+                String creatTimeTemp = timeTemp.substring((timeTemp.indexOf("，在 ") + 3), timeTemp.indexOf(" 创建"));
+                mv.setTotal(totalTemp.substring(0, totalTemp.indexOf("张照片")));
+                mv.setCreatTime(DateUtil.parseStrToDate(creatTimeTemp, "yyyy/MM/dd"));
+            }
         }
         return mv;
+    }
+
+    public List<MeiNv> getMeiNvList(CommonVo commonVo) {
+        List<MeiNv> meiNvList= new ArrayList<>();
+        if (commonVo.getType().equals("ALL")) {
+             meiNvList = meiNvRepository.getMeiNvAll(((commonVo.getPage() - 1 )* commonVo.getPageSize()), commonVo.getPageSize());
+        }
+        return meiNvList;
     }
 
 }

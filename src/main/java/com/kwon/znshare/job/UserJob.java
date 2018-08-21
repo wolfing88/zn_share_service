@@ -13,13 +13,12 @@ import org.springframework.stereotype.Component;
 @EnableAsync
 public class UserJob {
 
-    @Autowired
 
-    //每天凌晨1点执行一次
-    @Scheduled(cron = "0 0 1 * * ?")
-    public void loginJob() {
-
-    }
+//    //每天凌晨1点执行一次
+//    @Scheduled(cron = "0 0 1 * * ?")
+//    public void loginJob() {
+//
+//    }
 
 
 

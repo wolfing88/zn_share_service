@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.RestController;
 public class DataController {
 
 
-//    http://localhost:8080/hello/say?id=222
+//    http://localhost:8080/data/say?id=222
     //    @RequestMapping(value={"/say"},method = RequestMethod.GET)
     @GetMapping(value = "/say")
     public String say(@RequestParam(value = "id",required = false,defaultValue = "0") Integer myId){
