@@ -2,7 +2,6 @@ package com.kwon.znshare.service;
 
 import com.kwon.znshare.entity.MeiNv;
 import com.kwon.znshare.repository.MeiNvRepository;
-import com.kwon.znshare.util.DateUtil;
 import com.kwon.znshare.util.HttpClientUtil;
 import com.kwon.znshare.util.Util;
 import com.kwon.znshare.vo.CommonVo;
@@ -109,20 +108,19 @@ public class MeiNvService {
             if (els.size() > 0) {
                 String totalTemp = els.select("span").first().html();
                 String timeTemp = doc.select("div#dinfo").first().html();
-                String creatTimeTemp = timeTemp.substring((timeTemp.indexOf("，在 ") + 3), timeTemp.indexOf(" 创建"));
                 mv.setTotal(totalTemp.substring(0, totalTemp.indexOf("张照片")));
-                mv.setCreatTime(DateUtil.parseStrToDate(creatTimeTemp, "yyyy/MM/dd"));
+                mv.setCreatDate(timeTemp.substring((timeTemp.indexOf("，在 ") + 3), timeTemp.indexOf(" 创建")));
+                mv.setInsertTime(new Date());
             }
         }
         return mv;
     }
 
     public List<MeiNv> getMeiNvList(CommonVo commonVo) {
-        List<MeiNv> meiNvList= new ArrayList<>();
         if (commonVo.getType().equals("ALL")) {
-             meiNvList = meiNvRepository.getMeiNvAll(((commonVo.getPage() - 1 )* commonVo.getPageSize()), commonVo.getPageSize());
+            return meiNvRepository.getMeiNvAll(((commonVo.getPage() - 1) * commonVo.getPageSize()), commonVo.getPageSize());
         }
-        return meiNvList;
+        return meiNvRepository.getMeiNvByTpye(((commonVo.getPage() - 1) * commonVo.getPageSize()), commonVo.getPageSize(), commonVo.getType());
     }
 
 }

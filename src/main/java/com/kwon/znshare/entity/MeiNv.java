@@ -43,7 +43,10 @@ public class MeiNv {
     private String total;//图片数量
 
     @Column(nullable = false)
-    private Date creatTime;
+    private String creatDate;
+
+    @Column(nullable = false)
+    private Date insertTime;
 
     public Long getId() {
         return id;
@@ -93,11 +96,19 @@ public class MeiNv {
         this.total = total;
     }
 
-    public Date getCreatTime() {
-        return creatTime;
+    public String getCreatDate() {
+        return creatDate;
     }
 
-    public void setCreatTime(Date creatTime) {
-        this.creatTime = creatTime;
+    public void setCreatDate(String creatDate) {
+        this.creatDate = creatDate;
+    }
+
+    public Date getInsertTime() {
+        return insertTime;
+    }
+
+    public void setInsertTime(Date insertTime) {
+        this.insertTime = insertTime;
     }
 }
