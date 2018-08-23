@@ -1,81 +1,34 @@
 package com.kwon.znshare.util;
 
-import java.io.BufferedReader;
-
-import java.io.DataOutputStream;
-
-import java.io.IOException;
-
-import java.io.InputStreamReader;
-
-import java.io.UnsupportedEncodingException;
-
-import java.net.HttpURLConnection;
-
-import java.net.MalformedURLException;
-
-import java.net.SocketTimeoutException;
-
-import java.net.URL;
-
-import java.security.KeyManagementException;
-
-import java.security.KeyStoreException;
-
-import java.security.NoSuchAlgorithmException;
-
-import java.util.ArrayList;
-
-import java.util.HashMap;
-
-import java.util.List;
-
-import java.util.Map;
-
-import java.util.Set;
+import com.alibaba.fastjson.JSONObject;
+import org.apache.commons.io.IOUtils;
+import org.apache.http.HttpResponse;
+import org.apache.http.client.ClientProtocolException;
+import org.apache.http.client.HttpClient;
+import org.apache.http.client.config.RequestConfig;
+import org.apache.http.client.entity.UrlEncodedFormEntity;
+import org.apache.http.client.methods.HttpGet;
+import org.apache.http.client.methods.HttpPost;
+import org.apache.http.client.methods.HttpUriRequest;
+import org.apache.http.conn.ConnectTimeoutException;
+import org.apache.http.conn.ssl.SSLConnectionSocketFactory;
+import org.apache.http.conn.ssl.SSLContextBuilder;
+import org.apache.http.conn.ssl.TrustStrategy;
+import org.apache.http.entity.StringEntity;
+import org.apache.http.impl.client.CloseableHttpClient;
+import org.apache.http.impl.client.HttpClientBuilder;
+import org.apache.http.impl.client.HttpClients;
+import org.apache.http.message.BasicNameValuePair;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import javax.net.ssl.SSLContext;
-
-import org.apache.commons.io.IOUtils;
-
-import org.apache.commons.logging.Log;
-
-import org.apache.commons.logging.LogFactory;
-
-import org.apache.http.HttpResponse;
-
-import org.apache.http.client.ClientProtocolException;
-
-import org.apache.http.client.HttpClient;
-
-import org.apache.http.client.config.RequestConfig;
-
-import org.apache.http.client.entity.UrlEncodedFormEntity;
-
-import org.apache.http.client.methods.HttpGet;
-
-import org.apache.http.client.methods.HttpPost;
-
-import org.apache.http.client.methods.HttpUriRequest;
-
-import org.apache.http.conn.ConnectTimeoutException;
-
-import org.apache.http.conn.ssl.SSLConnectionSocketFactory;
-
-import org.apache.http.conn.ssl.SSLContextBuilder;
-
-import org.apache.http.conn.ssl.TrustStrategy;
-
-import org.apache.http.entity.StringEntity;
-
-import org.apache.http.impl.client.CloseableHttpClient;
-
-import org.apache.http.impl.client.HttpClientBuilder;
-
-import org.apache.http.impl.client.HttpClients;
-
-import org.apache.http.message.BasicNameValuePair;
-import com.alibaba.fastjson.JSONObject;
+import java.io.*;
+import java.net.*;
+import java.security.KeyManagementException;
+import java.security.KeyStoreException;
+import java.security.NoSuchAlgorithmException;
+import java.util.*;
 
 /**
  * @author ws
@@ -83,7 +36,7 @@ import com.alibaba.fastjson.JSONObject;
 
 public class HttpClientUtil {
 
-    private static final Log log = LogFactory.getLog(HttpClientUtil.class);
+    protected static final Logger logger = LoggerFactory.getLogger(HttpClientUtil.class);
 
     private static final String utf8 = "UTF-8";
 
@@ -185,7 +138,7 @@ public class HttpClientUtil {
 
         map.put("success", "false");
 
-        log.info("URL路径：" + finalUrl);
+        logger.info("URL路径：" + finalUrl);
 
         RequestConfig config = RequestConfig.custom().setSocketTimeout(40000).setConnectTimeout(40000).setConnectionRequestTimeout(40000).build();
 
@@ -219,7 +172,7 @@ public class HttpClientUtil {
 
             Long endTime = System.currentTimeMillis();
 
-            log.info("耗时 " + (endTime - startTime) + " 毫秒");
+            logger.info("耗时 " + (endTime - startTime) + " 毫秒");
 
             Integer statusCode = resp.getStatusLine().getStatusCode();
 
@@ -246,6 +199,11 @@ public class HttpClientUtil {
             exceptionMsg = "ClientProtocolException";
 
             e.printStackTrace();
+
+        } catch (SocketException e) {
+
+            logger.info("发生了一次SocketException");
+            baseAccessURL(finalUrl, post);
 
         } catch (IOException e) {
 
@@ -328,7 +286,7 @@ public class HttpClientUtil {
 
         map.put("success", "false");
 
-        log.info("baseAccessURL：" + finalUrl);
+        logger.info("baseAccessURL：" + finalUrl);
 
         Long startTime = System.currentTimeMillis();
 
@@ -351,7 +309,7 @@ public class HttpClientUtil {
                 pMethod.addHeader("Content-Type", "application/json; charset=" + requestEncoding);
                 String strParams = JSONObject.toJSONString(params);
 
-                //log.info("JSON参数：" + strParams);
+                //logger.info("JSON参数：" + strParams);
 
                 StringEntity entity = new StringEntity(strParams, requesParamstEncoding);
 
@@ -373,7 +331,7 @@ public class HttpClientUtil {
 
                 }
 
-                log.info("参数：" + nvps);
+                logger.info("参数：" + nvps);
 
                 pMethod.setEntity(new UrlEncodedFormEntity(nvps, requesParamstEncoding));
 
@@ -443,7 +401,7 @@ public class HttpClientUtil {
 
             Long endTime = System.currentTimeMillis();
 
-            log.info("耗时 " + (endTime - startTime) + " 毫秒");
+            logger.info("耗时 " + (endTime - startTime) + " 毫秒");
 
         }
 
@@ -475,7 +433,7 @@ public class HttpClientUtil {
 
     public Map<String, String> accessURLByJsonStream(String urlStr, String jsonStr, boolean isPost) {
 
-        log.info(String.format("以JSON方式访问:%s;是否POST:%s;参数:%s", urlStr, isPost, jsonStr));
+        logger.info(String.format("以JSON方式访问:%s;是否POST:%s;参数:%s", urlStr, isPost, jsonStr));
 
         Map<String, String> map = new HashMap<String, String>();
 
